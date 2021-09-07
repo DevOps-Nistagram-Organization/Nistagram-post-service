@@ -35,7 +35,47 @@ public class PostService {
         Post post = new Post(authorUsername, dto.getImagePath(), date, tags);
         return postRepository.save(post);
     }
-    
+
+    public Post getPost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        if (hasAccess(post)) {
+            return post;
+        }
+        throw new Exception("No access to post");
+    }
+    public List<Post> getFavouritePosts() throws Exception {
+        String username = userService.getUsername();
+        // TODO: Double check query
+        return postRepository.findAllByFavouredByUsersContainingOrderByDatePostedAsc(username);
+    }
+
+    public List<Post> getLikedPosts() throws Exception {
+        String username = userService.getUsername();
+        // TODO: Double check query
+        return postRepository.findByLikedByUsersContaining(username);
+    }
+
+    public List<Post> getMyPosts() throws Exception {
+        String username = userService.getUsername();
+        return getUsersPost(username);
+    }
+
+    public List<Post> getUsersPost(String username) throws Exception {
+        if (hasAccessToPosts(username)) {
+            return postRepository.findAllByAuthorUsernameOrderByDatePostedAsc(username);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public List<Post> getFeed() {
+        String username = userService.getUsername();
+        UserInfoDTO userInfo = userClient.getUser(username);
+        List<String> following = userInfo.getFollowing().stream().map(UserInfoDTO::getUsername).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Post> posts = postRepository.findAllByAuthorUsernameInOrderByDatePostedAsc(following, pageable);
+        return posts.toList();
+    }
+
     private boolean hasAccessToPosts(String author) {
         String username = userService.getUsername();
         if (author.equals(username)) {
@@ -55,6 +95,69 @@ public class PostService {
         }
         return userInfo.getPublicProfile() ||
                 userInfo.getFollowers().stream().anyMatch(userInfoDTO -> userInfoDTO.getUsername().equals(username));
+    }
+
+
+    public Post likePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getDislikedByUsers().remove(username);
+            post.getLikedByUsers().add(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public Post unLikePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getLikedByUsers().remove(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public Post dislikePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getLikedByUsers().remove(username);
+            post.getDislikedByUsers().add(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public Post unDislikePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getDislikedByUsers().remove(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public Post favouritePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getFavouredByUsers().add(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
+    }
+
+    public Post unFavouritePost(Long id) throws Exception {
+        Post post = postRepository.getById(id);
+        String username = userService.getUsername();
+        if (hasAccess(post)) {
+            post.getFavouredByUsers().remove(username);
+            return postRepository.save(post);
+        }
+        throw new Exception("No access to post");
     }
 
 }

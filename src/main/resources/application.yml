@@ -6,7 +6,7 @@ spring:
     name: post-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nistagramUser?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=Europe/Belgrade
+    url: jdbc:mysql://localhost:3306/nistagramPost?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=Europe/Belgrade
     username: root
     password: root
     data: classpath:dataDev.sql
