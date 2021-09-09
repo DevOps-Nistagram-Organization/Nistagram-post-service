@@ -25,7 +25,7 @@ public class PostConverter {
         dto.setId(post.getId());
         dto.setTags(post.getTags());
         dto.setDislikedByUsers(post.getDislikedByUsers());
-        dto.setLikedByUsers(post.getDislikedByUsers());
+        dto.setLikedByUsers(post.getLikedByUsers());
         dto.setFavouredByUsers(post.getFavouredByUsers());
         return dto;
     }
