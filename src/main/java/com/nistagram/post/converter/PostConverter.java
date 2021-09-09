@@ -3,6 +3,8 @@ package com.nistagram.post.converter;
 import com.nistagram.post.model.dto.PostDTO;
 import com.nistagram.post.model.entity.Post;
 
+import java.util.stream.Collectors;
+
 public class PostConverter {
     public static Post toPost(PostDTO dto) {
         Post post = new Post();
@@ -27,6 +29,9 @@ public class PostConverter {
         dto.setDislikedByUsers(post.getDislikedByUsers());
         dto.setLikedByUsers(post.getDislikedByUsers());
         dto.setFavouredByUsers(post.getFavouredByUsers());
+        if(post.getComments()!= null) {
+            dto.setComments(post.getComments().stream().map(CommentConverter::toDTO).collect(Collectors.toSet()));
+        }
         return dto;
     }
 }
