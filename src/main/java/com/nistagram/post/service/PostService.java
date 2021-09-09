@@ -48,7 +48,6 @@ public class PostService {
         }
         throw new Exception("No access to post");
     }
-
     public List<Post> getFavouritePosts() throws Exception {
         String username = userService.getUsername();
         // TODO: Double check query

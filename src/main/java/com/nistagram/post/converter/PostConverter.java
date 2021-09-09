@@ -27,7 +27,7 @@ public class PostConverter {
         dto.setId(post.getId());
         dto.setTags(post.getTags());
         dto.setDislikedByUsers(post.getDislikedByUsers());
-        dto.setLikedByUsers(post.getDislikedByUsers());
+        dto.setLikedByUsers(post.getLikedByUsers());
         dto.setFavouredByUsers(post.getFavouredByUsers());
         if(post.getComments()!= null) {
             dto.setComments(post.getComments().stream().map(CommentConverter::toDTO).collect(Collectors.toSet()));
