@@ -15,6 +15,10 @@ public class Post {
     private String imagePath;
     @Column
     private Date datePosted;
+
+    @OneToMany
+    private Set<Comment> comments;
+
     @ElementCollection
     private Set<String> tags;
     @ElementCollection
@@ -96,5 +100,13 @@ public class Post {
 
     public void setFavouredByUsers(Set<String> favouredByUsers) {
         this.favouredByUsers = favouredByUsers;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

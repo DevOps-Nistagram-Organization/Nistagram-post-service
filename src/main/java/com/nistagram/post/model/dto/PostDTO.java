@@ -14,7 +14,7 @@ public class PostDTO {
     private Set<String> likedByUsers;
     private Set<String> dislikedByUsers;
     private Set<String> favouredByUsers;
-
+    private Set<CommentDTO> comments;
     public PostDTO() {
     }
 
@@ -91,5 +91,13 @@ public class PostDTO {
 
     public void setFavouredByUsers(Set<String> favouredByUsers) {
         this.favouredByUsers = favouredByUsers;
+    }
+
+    public Set<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<CommentDTO> comments) {
+        this.comments = comments;
     }
 }

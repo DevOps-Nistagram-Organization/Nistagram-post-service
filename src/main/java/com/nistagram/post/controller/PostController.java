@@ -1,6 +1,7 @@
 package com.nistagram.post.controller;
 
 import com.nistagram.post.converter.PostConverter;
+import com.nistagram.post.model.dto.AddCommentDTO;
 import com.nistagram.post.model.dto.CreatePostDTO;
 import com.nistagram.post.model.dto.PostDTO;
 import com.nistagram.post.model.dto.PostIdWrapper;
@@ -100,4 +101,9 @@ public class PostController {
         return new ResponseEntity<>(PostConverter.toDTO(post), HttpStatus.OK);
     }
 
+    @PostMapping(value = "comment", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> addComment(@RequestBody AddCommentDTO commentDTO) throws Exception {
+        Post post = postService.addComment(commentDTO);
+        return new ResponseEntity<>(PostConverter.toDTO(post), HttpStatus.OK);
+    }
 }

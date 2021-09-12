@@ -1,9 +1,12 @@
 package com.nistagram.post.service;
 
 import com.nistagram.post.client.UserClient;
+import com.nistagram.post.model.dto.AddCommentDTO;
 import com.nistagram.post.model.dto.CreatePostDTO;
 import com.nistagram.post.model.dto.UserInfoDTO;
+import com.nistagram.post.model.entity.Comment;
 import com.nistagram.post.model.entity.Post;
+import com.nistagram.post.repository.CommentRepository;
 import com.nistagram.post.repository.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +24,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final UserClient userClient;
+    private final CommentRepository commentRepository;
 
-    public PostService(PostRepository postRepository, UserService userService, UserClient userClient) {
+    public PostService(PostRepository postRepository, UserService userService, UserClient userClient, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userService = userService;
         this.userClient = userClient;
+        this.commentRepository = commentRepository;
     }
 
     public Post createPost(CreatePostDTO dto) {
@@ -71,7 +76,7 @@ public class PostService {
         String username = userService.getUsername();
         UserInfoDTO userInfo = userClient.getUser(username);
         List<String> following = userInfo.getFollowing().stream().map(UserInfoDTO::getUsername).collect(Collectors.toList());
-        Pageable pageable = PageRequest.of(0,10);
+        Pageable pageable = PageRequest.of(0, 10);
         Page<Post> posts = postRepository.findAllByAuthorUsernameInOrderByDatePostedAsc(following, pageable);
         return posts.toList();
     }
@@ -160,4 +165,15 @@ public class PostService {
         throw new Exception("No access to post");
     }
 
+    public Post addComment(AddCommentDTO dto) throws Exception {
+        Post post = postRepository.getById(dto.getPostId());
+        String username = userService.getUsername();
+        if (!hasAccess(post)) {
+            throw new Exception("No access to post");
+        }
+        Comment comment = new Comment(null, dto.getCommentText(), username, new Date());
+        comment = commentRepository.save(comment);
+        post.getComments().add(comment);
+        return postRepository.save(post);
+    }
 }
