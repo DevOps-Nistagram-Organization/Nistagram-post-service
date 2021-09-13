@@ -3,6 +3,7 @@ package com.nistagram.post.service;
 import com.nistagram.post.client.UserClient;
 import com.nistagram.post.model.dto.AddCommentDTO;
 import com.nistagram.post.model.dto.CreatePostDTO;
+import com.nistagram.post.model.dto.PostIdWrapper;
 import com.nistagram.post.model.dto.UserInfoDTO;
 import com.nistagram.post.model.entity.Comment;
 import com.nistagram.post.model.entity.Post;
@@ -175,5 +176,10 @@ public class PostService {
         comment = commentRepository.save(comment);
         post.getComments().add(comment);
         return postRepository.save(post);
+    }
+
+    public Boolean deletePost(Long id) {
+        postRepository.deleteById(id);
+        return true;
     }
 }

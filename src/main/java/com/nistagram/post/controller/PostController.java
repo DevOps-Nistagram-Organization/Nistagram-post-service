@@ -106,4 +106,10 @@ public class PostController {
         Post post = postService.addComment(commentDTO);
         return new ResponseEntity<>(PostConverter.toDTO(post), HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "delete/{id}")
+    public ResponseEntity<Boolean> deletePost(@PathVariable("id") Long id){
+        Boolean response = postService.deletePost(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
