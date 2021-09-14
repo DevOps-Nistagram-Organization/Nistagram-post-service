@@ -112,4 +112,10 @@ public class PostController {
         Boolean response = postService.deletePost(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping(value = "searchTag/{tag}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PostDTO>> searchByTags(@PathVariable("tag") String tag) throws Exception {
+        List<Post> results = postService.searchByTags(tag);
+        List<PostDTO> dto = results.stream().map(PostConverter::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
 }

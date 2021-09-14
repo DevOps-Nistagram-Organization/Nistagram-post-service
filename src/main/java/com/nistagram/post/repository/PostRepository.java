@@ -18,4 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p where ?1 member of p.favouredByUsers order by p.datePosted asc ")
     List<Post> findAllByFavouredByUsersContainingOrderByDatePostedAsc(String username);
     Page<Post> findAllByAuthorUsernameInOrderByDatePostedAsc(Collection<String> authorUsername, Pageable pageable);
+    @Query("select p from Post p where ?1 member of p.tags order by p.datePosted asc ")
+    List<Post> findAllByTags(String tag);
+
 }
