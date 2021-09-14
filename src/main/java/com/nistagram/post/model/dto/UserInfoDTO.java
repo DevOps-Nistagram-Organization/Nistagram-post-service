@@ -19,11 +19,14 @@ public class UserInfoDTO {
     private Boolean agent;
     private String imagePath;
     private Boolean publicProfile;
+    private Boolean approvedAgent;
 
     private Set<UserInfoDTO> followers;
     private Set<UserInfoDTO> following;
     private Set<UserInfoDTO> sentFollowRequests;
     private Set<UserInfoDTO> receivedFollowRequests;
+    private Set<UserInfoDTO> mutedUsers;
+    private Set<UserInfoDTO> blockedUsers;
 
     public UserInfoDTO(Long id, String username, String firstName, String lastName, String email, String phone, String gender, Date dateOfBirth, String website, String biography, Boolean agent, Set<UserInfoDTO> followers, Set<UserInfoDTO> following, Set<UserInfoDTO> sentFollowRequests, Set<UserInfoDTO> receivedFollowRequests, String imagePath, Boolean publicProfile) {
         this.id = id;
@@ -182,5 +185,29 @@ public class UserInfoDTO {
 
     public void setPublicProfile(Boolean publicProfile) {
         this.publicProfile = publicProfile;
+    }
+
+    public Boolean getApprovedAgent() {
+        return approvedAgent;
+    }
+
+    public void setApprovedAgent(Boolean approvedAgent) {
+        this.approvedAgent = approvedAgent;
+    }
+
+    public Set<UserInfoDTO> getMutedUsers() {
+        return mutedUsers;
+    }
+
+    public void setMutedUsers(Set<UserInfoDTO> mutedUsers) {
+        this.mutedUsers = mutedUsers;
+    }
+
+    public Set<UserInfoDTO> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(Set<UserInfoDTO> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 }
