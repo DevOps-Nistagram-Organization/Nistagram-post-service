@@ -103,7 +103,6 @@ public class PostService {
                 userInfo.getFollowers().stream().anyMatch(userInfoDTO -> userInfoDTO.getUsername().equals(username));
     }
 
-
     public Post likePost(Long id) throws Exception {
         Post post = postRepository.getById(id);
         String username = userService.getUsername();
@@ -181,5 +180,9 @@ public class PostService {
     public Boolean deletePost(Long id) {
         postRepository.deleteById(id);
         return true;
+    }
+
+    public List<Post> searchByTags(String tag) {
+        return postRepository.findAllByTags(tag);
     }
 }
