@@ -51,16 +51,17 @@ public class PostService {
     }
     public List<Post> getFavouritePosts() throws Exception {
         String username = userService.getUsername();
-        // TODO: Double check query
         return postRepository.findAllByFavouredByUsersContainingOrderByDatePostedAsc(username);
     }
 
     public List<Post> getLikedPosts() throws Exception {
         String username = userService.getUsername();
-        // TODO: Double check query
         return postRepository.findByLikedByUsersContaining(username);
     }
-
+    public List<Post> getDislikedPosts() throws Exception {
+        String username = userService.getUsername();
+        return postRepository.findAllByDislikedByUsersContainingOrderByDatePostedAsc(username);
+    }
     public List<Post> getMyPosts() throws Exception {
         String username = userService.getUsername();
         return getUsersPost(username);

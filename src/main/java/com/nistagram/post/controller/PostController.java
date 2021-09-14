@@ -57,7 +57,12 @@ public class PostController {
         List<PostDTO> dto = feed.stream().map(PostConverter::toDTO).collect(Collectors.toList());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
+    @GetMapping(value = "getDisliked", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PostDTO>> getDislikedPosts() throws Exception {
+        List<Post> feed = postService.getDislikedPosts();
+        List<PostDTO> dto = feed.stream().map(PostConverter::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
     @GetMapping(value = "getSaved", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PostDTO>> getSaved() throws Exception {
         List<Post> feed = postService.getFavouritePosts();
