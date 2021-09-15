@@ -57,7 +57,12 @@ public class PostController {
         List<PostDTO> dto = feed.stream().map(PostConverter::toDTO).collect(Collectors.toList());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
+    @GetMapping(value = "getDisliked", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PostDTO>> getDislikedPosts() throws Exception {
+        List<Post> feed = postService.getDislikedPosts();
+        List<PostDTO> dto = feed.stream().map(PostConverter::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
     @GetMapping(value = "getSaved", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PostDTO>> getSaved() throws Exception {
         List<Post> feed = postService.getFavouritePosts();
@@ -111,5 +116,11 @@ public class PostController {
     public ResponseEntity<Boolean> deletePost(@PathVariable("id") Long id){
         Boolean response = postService.deletePost(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "searchTag/{tag}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PostDTO>> searchByTags(@PathVariable("tag") String tag) throws Exception {
+        List<Post> results = postService.searchByTags(tag);
+        List<PostDTO> dto = results.stream().map(PostConverter::toDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }

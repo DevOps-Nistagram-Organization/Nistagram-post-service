@@ -49,16 +49,20 @@ public class PostService {
         }
         throw new Exception("No access to post");
     }
+
     public List<Post> getFavouritePosts() throws Exception {
         String username = userService.getUsername();
-        // TODO: Double check query
         return postRepository.findAllByFavouredByUsersContainingOrderByDatePostedAsc(username);
     }
 
     public List<Post> getLikedPosts() throws Exception {
         String username = userService.getUsername();
-        // TODO: Double check query
         return postRepository.findByLikedByUsersContaining(username);
+    }
+
+    public List<Post> getDislikedPosts() throws Exception {
+        String username = userService.getUsername();
+        return postRepository.findAllByDislikedByUsersContainingOrderByDatePostedAsc(username);
     }
 
     public List<Post> getMyPosts() throws Exception {
@@ -79,7 +83,8 @@ public class PostService {
         List<String> following = userInfo.getFollowing().stream().map(UserInfoDTO::getUsername).collect(Collectors.toList());
         Pageable pageable = PageRequest.of(0, 10);
         Page<Post> posts = postRepository.findAllByAuthorUsernameInOrderByDatePostedAsc(following, pageable);
-        return posts.toList();
+        List<Post> postsFiltered = posts.stream().filter(post -> !isMuted(userInfo, post.getAuthorUsername())).collect(Collectors.toList());
+        return postsFiltered;
     }
 
     private boolean hasAccessToPosts(String author) {
@@ -102,7 +107,6 @@ public class PostService {
         return userInfo.getPublicProfile() ||
                 userInfo.getFollowers().stream().anyMatch(userInfoDTO -> userInfoDTO.getUsername().equals(username));
     }
-
 
     public Post likePost(Long id) throws Exception {
         Post post = postRepository.getById(id);
@@ -181,5 +185,18 @@ public class PostService {
     public Boolean deletePost(Long id) {
         postRepository.deleteById(id);
         return true;
+    }
+
+    public List<Post> searchByTags(String tag) {
+        return postRepository.findAllByTags(tag);
+    }
+    
+    private boolean isMuted(UserInfoDTO myInfo, String otherUsername) {
+        for (UserInfoDTO userInfoDTO : myInfo.getMutedUsers()) {
+            if (userInfoDTO.getUsername().equals(otherUsername)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
